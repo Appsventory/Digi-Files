@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Semua teks UI ada di sini (default = English).
+  Bahasa baru: buat res/values-<kode>/strings.xml (mis. values-in) dgn key yang sama.
+-->
+<resources>
+    <string name="app_name">Digi Files</string>
+    <string name="brand_digi">Digi</string>
+    <string name="brand_files">Files</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="shortcut_download">Download</string>
+    <string name="shortcut_pictures">Gallery</string>
+    <string name="shortcut_music">Music</string>
+    <string name="shortcut_movies">Movies</string>
+    <string name="shortcut_documents">Documents</string>
+    <string name="shortcut_applications">Applications</string>
+    <string name="section_explore">EXPLORE</string>
+    <string name="cd_collapse">Collapse</string>
+    <string name="cd_expand">Expand</string>
+
+    <!-- Settings screen -->
+    <string name="settings_general">GENERAL</string>
+    <string name="settings_appearance">APPEARANCE</string>
+    <string name="settings_storage">STORAGE</string>
+    <string name="settings_about">ABOUT</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_value">English</string>
+    <string name="settings_default_view">Default view</string>
+    <string name="settings_view_grid_value">Grid</string>
+    <string name="settings_view_list_value">List</string>
+    <string name="settings_theme">Theme</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_auto">Auto (follow system)</string>
+    <string name="settings_accent">Accent color</string>
+    <string name="brand_cyan">Cyan</string>
+    <string name="brand_blue">Blue</string>
+    <string name="brand_green">Green</string>
+    <string name="brand_orange">Orange</string>
+    <string name="brand_pink">Pink</string>
+    <string name="brand_purple">Purple</string>
+    <string name="brand_red">Red</string>
+    <string name="brand_system">System (wallpaper)</string>
+    <string name="settings_storages">Storages</string>
+    <string name="settings_trash">Trash</string>
+    <string name="settings_trash_title">Empty Trash automatically</string>
+    <string name="trash_keep">Keep until emptied</string>
+    <plurals name="trash_after_days">
+        <item quantity="one">After %d day</item>
+        <item quantity="other">After %d days</item>
+    </plurals>
+    <string name="settings_version">Version</string>
+
+    <!-- Media sources -->
+    <string name="settings_media_sources">Media sources</string>
+    <string name="settings_media_sources_title">Scan for Gallery / Music / Movies</string>
+    <string name="settings_media_sources_none">Internal storage only</string>
+    <plurals name="settings_media_sources_count">
+        <item quantity="one">Internal storage + %d other</item>
+        <item quantity="other">Internal storage + %d others</item>
+    </plurals>
+    <string name="settings_media_sources_internal_note">Internal storage is always scanned automatically.</string>
+    <string name="settings_media_sources_empty">No SD card, USB drive, or saved network server yet.</string>
+    <string name="settings_smb_thumbnails">Download thumbnails for network photos</string>
+    <string name="settings_smb_thumbnails_note">Off by default to save data. Videos always show a plain icon - grabbing a frame would mean downloading the whole file.</string>
+
+    <!-- Home -->
+    <string name="home_title">HOME</string>
+    <string name="home_tools">TOOLS</string>
+    <string name="tool_trash">Trash</string>
+    <string name="tool_user_apps">User Apps</string>
+    <string name="tool_system_settings">System settings</string>
+    <string name="tool_quick_share">Quick Share</string>
+    <string name="toast_quick_share_unavailable">Quick Share isn\'t available on this device</string>
+    <string name="tool_edit">Edit</string>
+    <string name="tools_edit_title">Customize tools</string>
+    <string name="action_done">Done</string>
+    <string name="apps_user">USER APPS</string>
+    <string name="apps_system">SYSTEM APPS</string>
+
+    <!-- Storage -->
+    <string name="storage_internal">Internal Storage</string>
+    <string name="storage_free">%1$s Free</string>
+    <string name="storage_used">Used: %1$s / %2$s</string>
+
+    <!-- File browser -->
+    <string name="section_folders">FOLDERS</string>
+    <string name="section_files">FILES</string>
+    <string name="folder_empty">This folder is empty</string>
+    <string name="list_empty">Nothing to show</string>
+    <string name="file_modified">Modified: %1$s</string>
+    <plurals name="item_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+    <string name="view_list">List view</string>
+    <string name="view_grid">Grid view</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_more_options">More options</string>
+
+    <!-- Top bar menu -->
+    <string name="menu_show_hidden">Show hidden files</string>
+    <string name="menu_select_multiple">Select multiple</string>
+    <string name="menu_settings">Settings</string>
+
+    <!-- Trash menu -->
+    <string name="menu_empty_trash">Empty Trash</string>
+    <string name="menu_delete_from">Delete from %1$s</string>
+    <string name="menu_delete_marked">Delete marked items (%1$d)</string>
+    <string name="action_delete">Delete</string>
+    <string name="delete_confirm_title">Delete permanently?</string>
+    <plurals name="delete_confirm_body">
+        <item quantity="one">%d item will be deleted forever. This can\'t be undone.</item>
+        <item quantity="other">%d items will be deleted forever. This can\'t be undone.</item>
+    </plurals>
+
+    <string name="menu_restore_all">Restore all</string>
+    <string name="menu_restore_marked">Restore marked items (%1$d)</string>
+
+    <!-- Selection actions -->
+    <string name="action_copy">Copy</string>
+    <string name="action_move">Move</string>
+    <string name="action_share">Share</string>
+    <string name="action_paste">Paste here (%1$d)</string>
+    <string name="action_restore">Restore</string>
+
+    <!-- Progress / undo -->
+    <string name="task_copying">Copying</string>
+    <string name="task_moving">Moving</string>
+    <string name="task_progress">%1$s of %2$s</string>
+    <plurals name="task_copied">
+        <item quantity="one">Copied %d item</item>
+        <item quantity="other">Copied %d items</item>
+    </plurals>
+    <plurals name="task_moved">
+        <item quantity="one">Moved %d item</item>
+        <item quantity="other">Moved %d items</item>
+    </plurals>
+    <string name="task_renamed">Renamed</string>
+    <string name="task_undone">Undone</string>
+    <string name="task_cancelled">Cancelled</string>
+    <string name="task_failed">The operation failed</string>
+    <string name="task_queued">+%d queued</string>
+    <string name="task_cancel_all">Cancel all</string>
+    <string name="conflict_title">Already exists</string>
+    <string name="conflict_one">“%1$s” already exists in this folder.</string>
+    <string name="conflict_many">%1$d items already exist in this folder.</string>
+    <string name="conflict_trash_hint">Replaced items go to Trash.</string>
+    <string name="conflict_keep_both">Keep both</string>
+    <string name="conflict_replace">Replace</string>
+    <string name="conflict_skip">Skip</string>
+    <!-- Archives: tap menu, viewer, compress -->
+    <string name="archive_view">View contents</string>
+    <string name="archive_extract_here">Extract here</string>
+    <string name="archive_extract_to">Extract to “%1$s”</string>
+    <string name="archive_extract_selected">Extract selected (%1$d)</string>
+    <string name="action_clear_selection">Clear selection</string>
+    <string name="action_open_with">Open with</string>
+    <string name="archive_empty">This archive is empty</string>
+    <string name="archive_up">Up one level</string>
+    <string name="toast_archive_open_failed">Can\'t open this archive (damaged, unsupported or password protected)</string>
+    <string name="action_compress">Compress</string>
+    <string name="compress_title">Compress</string>
+    <string name="compress_name_hint">Archive name</string>
+    <string name="compress_action">Compress</string>
+    <string name="compress_level_title">Compression</string>
+    <string name="compress_level_store">Store</string>
+    <string name="compress_level_fast">Fast</string>
+    <string name="compress_level_normal">Normal</string>
+    <string name="compress_level_maximum">Maximum</string>
+    <string name="compress_password_hint">Password (optional)</string>
+    <string name="compress_password_repeat">Repeat password</string>
+    <string name="compress_password_mismatch">The passwords don\'t match</string>
+    <string name="compress_password_note">Encrypted with AES-256. Keep the password safe: there is no way to recover it.</string>
+    <string name="password_show">Show password</string>
+    <string name="password_hide">Hide password</string>
+    <string name="archive_password_title">Password required</string>
+    <string name="archive_password_message">“%1$s” is protected. Enter its password.</string>
+    <string name="archive_password_hint">Password</string>
+    <string name="archive_password_wrong">Wrong password, try again</string>
+    <string name="archive_password_unlock">Unlock</string>
+    <string name="settings_delete_archive_after_extract">Delete archive after extracting</string>
+    <string name="task_archive_trashed">Archive moved to Trash</string>
+    <string name="task_archive_not_encrypted">The archive could not be password protected, so it was not created</string>
+    <string name="task_archive_wrong_password">Wrong password</string>
+    <string name="compress_rar_note">RAR archives can be opened and extracted, but not created.</string>
+    <!-- Archives: task progress -->
+    <string name="task_extracting">Extracting</string>
+    <string name="task_compressing">Compressing</string>
+    <plurals name="task_extracted">
+        <item quantity="one">Extracted %d item</item>
+        <item quantity="other">Extracted %d items</item>
+    </plurals>
+    <string name="task_archive_created">Created %1$s</string>
+    <string name="task_archive_failed">Can\'t read or write this archive (damaged, unsupported or password protected)</string>
+    <string name="task_preparing">Preparing…</string>
+    <string name="task_item_of">Item %1$d of %2$d</string>
+    <string name="task_no_space">Not enough free space: %1$s needed, %2$s available</string>
+    <string name="task_skipped">Nothing to do: the item is already in this folder, or can\'t be put inside itself</string>
+    <string name="task_cancelled_partial">Cancelled · %1$s</string>
+    <plurals name="task_failed_count">
+        <item quantity="one">%d item failed</item>
+        <item quantity="other">%d items failed</item>
+    </plurals>
+    <string name="task_result_with_failures">%1$s · %2$s</string>
+    <string name="task_eta_seconds">%d sec left</string>
+    <string name="task_eta_minutes">%d min left</string>
+    <string name="task_eta_hours">%1$d h %2$d min left</string>
+    <string name="action_undo">Undo</string>
+
+    <!-- Delete / trash choice -->
+    <string name="delete_permanently">Delete permanently</string>
+    <plurals name="delete_trash_body">
+        <item quantity="one">%d item will be moved to Trash. You can restore it from there.</item>
+        <item quantity="other">%d items will be moved to Trash. You can restore them from there.</item>
+    </plurals>
+    <string name="viewer_delete_title">Delete photo?</string>
+    <string name="viewer_delete_trash_body">This photo will be moved to Trash. You can restore it from there.</string>
+    <string name="viewer_delete_permanent_body">This photo will be deleted forever. This can\'t be undone.</string>
+    <string name="cd_delete">Delete</string>
+
+    <!-- Item context menu -->
+    <string name="action_select_multiple">Select multiple</string>
+    <string name="action_open_install">Open / Install</string>
+    <string name="action_open_location">Open source location</string>
+    <string name="action_details">Details</string>
+
+    <!-- Rename / properties -->
+    <string name="action_rename">Rename</string>
+    <string name="action_select_all">Select all</string>
+    <string name="action_select_between">Select between</string>
+    <string name="action_properties">Properties</string>
+    <string name="toast_rename_failed">Can\'t rename: empty, invalid or name already exists</string>
+    <string name="prop_name">Name</string>
+    <string name="prop_location">Location</string>
+    <string name="prop_type">Type</string>
+    <string name="prop_type_folder">Folder</string>
+    <string name="prop_type_file">File</string>
+    <string name="prop_size">Size</string>
+    <string name="prop_contents">Contents</string>
+    <string name="prop_contents_value">%1$d files, %2$d folders</string>
+    <string name="prop_modified">Modified</string>
+    <string name="prop_calculating">Calculating…</string>
+    <string name="prop_selected">%d items selected</string>
+
+    <!-- Search -->
+    <string name="search_hint">Search in this folder</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_close">Close</string>
+    <string name="cd_clear">Clear</string>
+
+    <!-- Media -->
+    <string name="media_tab_photos">Photos</string>
+    <string name="media_tab_videos">Videos</string>
+    <string name="media_tab_albums">Albums</string>
+    <string name="media_tab_songs">Songs</string>
+    <string name="media_tab_artists">Artists</string>
+    <!-- Long-press menu of Gallery / Videos / Music -->
+    <string name="action_show_in_folder">Show in folder</string>
+    <string name="media_action_view">View</string>
+    <string name="media_action_play">Play</string>
+    <string name="media_selected_count">%1$d selected</string>
+    <string name="media_today">Today</string>
+    <string name="media_yesterday">Yesterday</string>
+    <string name="cd_play">Play</string>
+    <string name="cd_pause">Pause</string>
+    <string name="cd_next">Next</string>
+    <string name="cd_previous">Previous</string>
+
+    <!-- Notifications -->
+    <string name="notif_channel_music">Music playback</string>
+    <string name="notif_channel_tasks">File operations</string>
+    <string name="notif_stop">Stop</string>
+
+    <!-- SMB -->
+    <string name="action_refresh">Refresh</string>
+    <string name="toast_volume_removed">The drive was removed</string>
+    <string name="toast_downloading">Downloading…</string>
+    <string name="toast_smb_failed">Couldn\'t open the file from the network</string>
+    <string name="smb_error_connect">Can\'t reach this location. Check that the server is on and the connection settings are right.</string>
+    <string name="smb_error_auth">Access denied. Check the user name and password.</string>
+    <string name="smb_edit">Edit connection</string>
+    <string name="smb_forget">Forget connection</string>
+    <string name="smb_add_title">Add network location</string>
+    <string name="smb_edit_title">Edit connection</string>
+    <string name="smb_connect_title">Connect</string>
+    <string name="smb_name">Name (optional)</string>
+    <string name="smb_host">Server address (e.g. 192.168.1.10)</string>
+    <string name="smb_share">Share name</string>
+    <string name="smb_share_hint">e.g. public, media, Shared</string>
+    <string name="smb_add_share">Add shared folder</string>
+    <string name="smb_add_share_title">Add shared folder</string>
+    <string name="smb_forget_share">Forget this shared folder</string>
+    <string name="smb_no_shares_detected">No shares found automatically. Add one by name from the menu.</string>
+    <string name="smb_anonymous">Anonymous / guest</string>
+    <string name="smb_username">User name</string>
+    <string name="smb_password">Password</string>
+    <string name="smb_domain">Domain / workgroup (optional)</string>
+    <string name="smb_connect">Connect</string>
+    <string name="smb_connecting">Connecting…</string>
+    <string name="smb_forget_title">Forget this connection?</string>
+    <string name="smb_forget_body">The saved address and password are removed. Files on the server are not touched.</string>
+    <string name="smb_forget_action">Forget</string>
+    <string name="smb_detected">Found on network · tap to connect</string>
+    <string name="smb_host_required">Enter the server address</string>
+    <string name="smb_scan">Scan for servers</string>
+    <string name="smb_scanning">Scanning the network…</string>
+    <string name="smb_scan_results">Found on this network — tap to use:</string>
+    <string name="network_debug_title">Network debug</string>
+    <string name="network_debug_running">Running checks…</string>
+    <string name="network_debug_show">Show network debug</string>
+    <string name="action_close">Close</string>
+    <string name="cd_show_password">Show password</string>
+    <string name="cd_hide_password">Hide password</string>
+
+    <!-- Create folder -->
+    <string name="create_folder">Create Folder</string>
+    <string name="folder_name">Folder name</string>
+    <string name="action_create">Create</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="toast_folder_created">Folder created</string>
+    <string name="toast_folder_create_failed">Failed to create folder</string>
+
+    <!-- Permission -->
+    <string name="permission_first_run_title">Allow access to your files</string>
+    <string name="permission_first_run_body">DigiFiles needs “All files access” to browse, copy and manage the files on this device and on your external drives. You will be taken to the system settings to switch it on.</string>
+    <string name="permission_first_run_allow">Continue</string>
+    <string name="permission_first_run_later">Not now</string>
+    <string name="permission_title">Storage access required</string>
+    <string name="permission_body">Allow All files access so the app can read every folder.</string>
+    <string name="permission_open_settings">Open Settings</string>
+
+    <!-- Toasts -->
+    <string name="toast_cannot_open_app">Can\'t open this app</string>
+    <string name="toast_no_app_to_open">No app can open this file</string>
+    <string name="toast_allow_install">Allow installs from this app, then tap the APK again</string>
+    <string name="toast_settings_unavailable">Settings are not available on this device</string>
+    <string name="toast_share_files_only">Only files can be shared</string>
+    <string name="toast_coming_soon">Coming soon</string>
+    <string name="toast_invalid_file">Invalid file</string>
+    <string name="toast_share_failed">Failed to share file: %1$s</string>
+    <string name="toast_press_again_exit">Press again to exit</string>
+    <string name="toast_press_again_cancel">Press again to cancel</string>
+    <string name="action_eject">Eject</string>
+    <string name="eject_title">Eject %1$s?</string>
+    <string name="eject_body">Copy and move tasks must be finished. Music playing from this drive will stop. Afterwards the drive can be removed safely.</string>
+    <string name="eject_working">Ejecting…</string>
+    <string name="eject_busy">A copy or move is still running. Wait for it to finish, then eject.</string>
+    <string name="eject_done">%1$s can now be removed safely</string>
+    <string name="eject_use_system">This device only allows ejecting from system settings. Opening them…</string>
+
+    <!-- Gallery floating time indicator -->
+    <string name="gallery_time_today">Today</string>
+    <string name="gallery_time_yesterday">Yesterday</string>
+    <string name="gallery_time_earlier_week">Earlier this week</string>
+    <string name="gallery_time_earlier_month">Earlier this month</string>
+    <string name="video_player_title">Video</string>
+    <string name="video_player_error">Cannot play this video</string>
+    <string name="video_player_settings">Player settings</string>
+    <string name="video_player_auto_next">Auto Next</string>
+    <string name="video_player_speed">Speed · %1$s</string>
+    <string name="video_player_audio">Audio track</string>
+
+    <!-- App update check (GitHub Releases) -->
+    <string name="update_title">Check for Updates</string>
+    <string name="update_installed_version">Installed: %1$s</string>
+    <string name="update_source">Source: %1$s</string>
+    <string name="update_checking">Checking for updates…</string>
+    <string name="update_available">Update available: %1$s</string>
+    <string name="update_up_to_date">You are up to date</string>
+    <string name="update_newer_installed">Installed version is newer than the latest release</string>
+    <string name="update_version_unknown">Could not compare versions</string>
+    <string name="update_published">Published: %1$s</string>
+    <string name="update_release_notes">Release notes</string>
+    <string name="update_download">Download</string>
+    <string name="update_open_release_page">Open Release Page</string>
+    <string name="update_view_on_github">View on GitHub</string>
+    <string name="update_select_asset">Choose a download file</string>
+    <string name="update_no_assets">This release has no downloadable app package</string>
+    <string name="update_no_releases_title">No releases yet</string>
+    <string name="update_no_releases_body">This repository has not published any releases. Check back later.</string>
+    <string name="update_error_title">Could not check for updates</string>
+    <string name="update_error_network">Network error. Check your connection and try again.</string>
+    <string name="update_error_http">Server returned an error (HTTP %1$d).</string>
+    <string name="update_error_rate_limit">GitHub rate limit reached. Try again in a few minutes.</string>
+    <string name="update_error_parse">Unexpected response from the server.</string>
+    <string name="update_downloading">Downloading update…</string>
+    <string name="update_download_started">Download started</string>
+    <string name="update_download_failed">Download failed</string>
+    <string name="update_download_unavailable">Downloads are not available on this device</string>
+    <!-- Update screen: download states -->
+    <string name="update_install_now">Install Now</string>
+    <string name="update_open_file">Open file</string>
+    <string name="update_retry_download">Retry download</string>
+    <string name="update_downloading_pct">Downloading %1$d%%</string>
+    <string name="update_downloading_plain">Downloading…</string>
+    <string name="update_waiting_network">Waiting for network…</string>
+    <string name="update_cancel_download">Cancel</string>
+    <string name="update_change_file">Change file</string>
+    <string name="update_bytes_progress">%1$s of %2$s</string>
+    <string name="update_bytes_so_far">%1$s downloaded</string>
+    <string name="update_ready_caption">Downloaded · %1$s</string>
+    <string name="update_failed_network">Download failed. Check your connection and try again.</string>
+    <string name="update_failed_storage">Not enough free storage to download this file.</string>
+    <string name="update_failed_http">The server could not provide the file. Try again later.</string>
+    <string name="update_failed_incomplete">The downloaded file is incomplete or damaged. Try again.</string>
+    <string name="update_failed_unknown">Download failed. Try again.</string>
+    <string name="update_file_missing">The downloaded file is no longer available.</string>
+    <string name="update_not_installable">This file is not an app package and cannot be installed.</string>
+
+    <!-- Update screen: install permission explanation -->
+    <string name="update_install_permission_title">Allow installing updates</string>
+    <string name="update_install_permission_body">Android needs your permission before Digi Files can install the downloaded update. On the next screen, turn on \"Allow from this source\", then come back and tap Install Now.</string>
+    <string name="update_install_permission_open">Open settings</string>
+
+    <!-- Update screen: asset chooser -->
+    <string name="update_choose_hint">Pick the package you want. Nothing is downloaded until you confirm.</string>
+    <string name="update_choose_confirm">Download</string>
+    <string name="update_asset_debug">Debug</string>
+    <string name="update_asset_release">Release</string>
+    <string name="update_asset_unknown_size">Size unknown</string>
+    <string name="cd_selected">Selected</string>
+    <string name="cd_file_type_apk">App package</string>
+    <string name="cd_file_type_other">File</string>
+
+    <!-- Update screen: release notes -->
+    <string name="update_release_info">Release information</string>
+    <string name="update_latest_version">Latest: %1$s</string>
+    <string name="cd_release_notes">Release notes. Use up and down to scroll.</string>
+
+    <string name="action_retry">Retry</string>
+
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Focus stroke -->
+    <dimen name="focus_stroke_width">2dp</dimen>
+
+    <!-- Focus drop shadow (sesuai desain: X 0, Y 4, Blur 16, Spread 0) -->
+    <dimen name="focus_shadow_x">0dp</dimen>
+    <dimen name="focus_shadow_y">4dp</dimen>
+    <dimen name="focus_shadow_blur">16dp</dimen>
+    <dimen name="focus_shadow_spread">0dp</dimen>
+
+    <!-- Corner kartu -->
+    <dimen name="card_corner">14dp</dimen>
+    <dimen name="row_corner">12dp</dimen>
+    <dimen name="dashed_stroke_width">1.5dp</dimen>
+</resources>

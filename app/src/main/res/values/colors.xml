@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SATU-SATUNYA tempat definisi warna app.
+  Mau ganti warna? Edit di sini saja, semua UI ikut berubah.
+  Nama Kotlin ada di ui/theme/Color.kt (baca via colorResource).
+-->
+<resources>
+    <!-- Brand -->
+    <color name="cyan_accent">#FF00B4D8</color>
+    <color name="cyan_dim">#FF0096B4</color>
+
+    <!-- Surface -->
+    <color name="bg_dark">#FF0D0D0D</color>
+    <color name="surface_dark">#FF1A1A1A</color>
+    <color name="card_dark">#FF242424</color>
+    <color name="divider_dark">#FF333333</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#FFB0B0B0</color>
+    <color name="text_muted">#FF6B6B6B</color>
+
+    <!-- State: FOCUS selalu cyan, ACTIVE selalu abu #212121 -->
+    <color name="focus_color">@color/cyan_accent</color>
+    <color name="active_color">#FF212121</color>
+
+    <!-- Konten di atas warna accent (icon/teks saat focus, FAB, tombol) -->
+    <color name="on_accent">#FF000000</color>
+    <color name="on_accent_variant">#A6000000</color>
+
+    <!-- Efek focus kartu Main/Explore -->
+    <color name="focus_stroke">@color/focus_color</color>
+    <!-- Warna sama dgn stroke, opacity 23.5% (#3C). Ubah hue di sini kalau stroke diganti. -->
+    <color name="focus_shadow">#3C00B4D8</color>
+    <!-- Marked (selected) item stroke, when not focused -->
+    <color name="mark_stroke">@color/cyan_dim</color>
+    <color name="idle_dashed">#806B6B6B</color>
+
+    <!-- Status-bar icons of the copy / move notifications (system tints them, must stay white) -->
+    <color name="notif_icon">#FFFFFFFF</color>
+
+    <!-- Error -->
+    <color name="error_red">#FFFF5252</color>
+    <color name="on_error">#FFFFFFFF</color>
+
+    <!-- Light theme -->
+    <color name="light_bg">#FFF4F6F8</color>
+    <color name="light_surface">#FFFFFFFF</color>
+    <color name="light_card">#FFFFFFFF</color>
+    <color name="light_divider">#FFDDE1E6</color>
+    <color name="light_active">#FFE3E7EB</color>
+    <color name="light_text_primary">#FF15181C</color>
+    <color name="light_text_secondary">#FF505862</color>
+    <color name="light_text_muted">#FF828B96</color>
+    <color name="light_idle_dashed">#80828B96</color>
+    <!-- Content on dark accents (auto-picked by accent luminance) -->
+    <color name="on_accent_light">#FFFFFFFF</color>
+
+    <!-- Brand color presets (Settings > Accent color). Default = cyan_accent -->
+    <color name="brand_blue">#FF4C8DFF</color>
+    <color name="brand_green">#FF2ECC71</color>
+    <color name="brand_orange">#FFFF9F1C</color>
+    <color name="brand_pink">#FFFF5C8A</color>
+    <color name="brand_purple">#FFB388FF</color>
+    <color name="brand_red">#FFFF5252</color>
+
+    <!-- Status bar / window (dipakai themes.xml) -->
+    <color name="window_bg">@color/bg_dark</color>
+</resources>
