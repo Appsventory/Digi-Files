@@ -45,9 +45,20 @@ Digi Files is an Android file manager written in Kotlin with Jetpack Compose. It
 - **File browser** with grid or list view, a "show hidden files" toggle, search within the current folder, and multi-select (including select all / select between).
 - **Copy, move, paste, rename, create folder, share, properties.** Copy and move run as queued background tasks in a foreground service with progress, cancel and undo. Name conflicts offer Keep both / Replace / Skip; replaced items go to Trash.
 - **Trash.** Deleting can move items to Trash, which renames them to `.trashed-<seconds>-<name>` in their original folder (see [`FileOps.kt`](app/src/main/java/com/appsventory/digiapps/nemo/util/FileOps.kt)), or delete permanently. Items can be restored, and Trash can be emptied manually or automatically after a configurable number of days.
-- **Open / install.** APK files are handed to Android's package installer (the app asks you to allow installs from this app first); other files open through an "open with" chooser.
+- **Open / install.** APK files are handed to Android's package installer (the app asks you to allow installs from this app first). Images, video, audio, archives, PDF and plain text open in Digi Files when supported; other types use the system "open with" chooser.
 - **Eject** for removable volumes, where the device allows it; otherwise the app opens system settings.
-- **Pick and view intents.** `MainActivity` declares `GET_CONTENT`, `PICK`, `OPEN_DOCUMENT` and `VIEW` filters, so it can be used as a file picker by other apps.
+- **Create folder** dialog always starts with an empty name field after create, cancel, or dismiss (no stale text).
+
+### Open with Digi Files (external intents)
+
+Digi Files can be chosen from a browser, download manager, or system file manager to open a supported file directly.
+
+- **VIEW** intent filters are limited to formats the app can actually handle: `image/*`, `video/*`, `audio/*`, common archive MIME types, `application/pdf`, and `text/*`. There is **no** catch-all `*/*` VIEW filter, so Digi Files does not appear for unsupported types (e.g. Office documents).
+- **GET_CONTENT / PICK / OPEN_DOCUMENT** still accept `*/*` so other apps can use Digi Files as a **file picker**.
+- Incoming `content://` and `file://` URIs are resolved at runtime ([`ExternalFileOpen.kt`](app/src/main/java/com/appsventory/digiapps/nemo/util/ExternalFileOpen.kt)); archives without a local path may be copied to a temporary cache file.
+- **Routing:** images → in-app image viewer; video → Media3 player; audio → music player service; archives → archive browser; PDF → platform `PdfRenderer` viewer; text → streaming text viewer.
+- **Back after an external open:** on a cold start from VIEW/SEND, closing the preview finishes the activity so Android returns to the calling app. If Digi Files was already running, only the preview closes and the existing session continues.
+- Warm starts use `singleTop` + `onNewIntent` so a second external file can open without stacking duplicate main activities.
 
 ### Archives
 
@@ -73,6 +84,11 @@ Format support, taken from [`Archives.kt`](app/src/main/java/com/appsventory/dig
 - Browse and copy files from shares; opening a file downloads it to the app cache first.
 - Network photo thumbnails are optional and off by default.
 - The SMB client is [jcifs-ng](https://github.com/AgNO3/jcifs-ng), configured for SMB1 through SMB 3.1.1 negotiation (`SmbClient.kt`).
+
+### Documents
+
+- **PDF viewer** using Android's built-in `PdfRenderer` (no third-party PDF library): vertical page list, on-demand page bitmaps, pinch zoom, and clear errors for inaccessible, empty, or unreadable files. Works with `content://` URIs via `ParcelFileDescriptor`.
+- **Text viewer** for plain text and common text-like extensions (`.txt`, `.md`, `.log`, `.json`, …): UTF-8 with BOM / UTF-16 detection, 2 MiB read limit with a truncation notice, monospace dark-theme layout.
 
 ### Media
 
@@ -206,6 +222,10 @@ This is a description of the code, not a security audit.
 - Video thumbnails for SMB files are not generated (the setting notes that grabbing a frame would require downloading the whole file).
 - `PlaceholderActivity` / `PlaceholderScreen` are legacy names in the code; those screens display real Gallery, Music and Movies content.
 - No continuous integration configuration, screenshots or release artifacts are included in this repository.
+- Encrypted PDFs and some malformed PDFs cannot be rendered by `PdfRenderer`; the viewer shows an error instead.
+- Very large text files are only shown up to the first 2 MiB.
+- Opening a large archive from a `content://` URI may require a temporary copy into the app cache.
+- Downloads that report only `application/octet-stream` without a matching extension may not offer Digi Files in the system chooser (by design; VIEW filters are format-specific).
 
 ## Contributing
 

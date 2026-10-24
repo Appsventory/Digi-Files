@@ -162,7 +162,12 @@ class VideoPlayerActivity : ComponentActivity() {
                 putStringArrayListExtra(EXTRA_URIS, ArrayList(uris.map { it.toString() }))
                 putStringArrayListExtra(EXTRA_TITLES, ArrayList(titles))
                 putExtra(EXTRA_INDEX, startIndex.coerceIn(0, uris.lastIndex))
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                // Only NEW_TASK when started from a non-Activity context (e.g. Service).
+                // From MainActivity, stacking in the same task lets Back return to the caller
+                // after an external VIEW session finishes MainActivity underneath.
+                if (context !is android.app.Activity) {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             context.startActivity(intent)

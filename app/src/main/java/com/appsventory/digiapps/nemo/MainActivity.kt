@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.appsventory.digiapps.nemo.data.FileItem
 import com.appsventory.digiapps.nemo.ui.*
 import com.appsventory.digiapps.nemo.ui.theme.setDigiContent
 import com.appsventory.digiapps.nemo.ui.UpdatePage
@@ -75,13 +76,23 @@ import com.appsventory.digiapps.nemo.util.VolumeKind
 import com.appsventory.digiapps.nemo.util.detectVolumes
 import com.appsventory.digiapps.nemo.util.freeLabel
 import com.appsventory.digiapps.nemo.util.isTelevision
-import com.appsventory.digiapps.nemo.util.isSameOrChild
 import java.io.File
 
 class MainActivity : ComponentActivity() {
 
     // "Show in folder" requests from the Pictures / Music / Movies screens (also arrives while already running)
     private var openFolderRequest by mutableStateOf<String?>(null)
+
+    /** External ACTION_VIEW / SEND file to open in the appropriate in-app viewer. */
+    private var externalOpenRequest by mutableStateOf<com.appsventory.digiapps.nemo.util.ExternalFileOpen.Resolved?>(null)
+
+    /**
+     * True when this activity instance was brought up primarily to preview a file for another app
+     * (cold start from ACTION_VIEW/SEND). When the preview closes we [finish] so Android resumes
+     * the caller. Cleared on warm starts ([onNewIntent]) so an already-running DigiFiles session
+     * is not torn down.
+     */
+    private var exitAfterExternalViewer by mutableStateOf(false)
 
     override fun onDestroy() {
         // leaving the app for good: remembered archive passwords go with it
@@ -93,23 +104,44 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         intent.getStringExtra(AppNavigator.EXTRA_OPEN_FOLDER)?.let { openFolderRequest = it }
+        // Warm start: DigiFiles is already the user's session — open the file, do not finish after.
+        exitAfterExternalViewer = false
+        applyExternalIntent(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intentInfo = parseLaunchIntent(intent)
         openFolderRequest = intent?.getStringExtra(AppNavigator.EXTRA_OPEN_FOLDER)
+        // Cold start: process VIEW/SEND once (avoid re-opening after process death if state restored)
+        if (savedInstanceState == null) {
+            applyExternalIntent(intent, isColdStart = true)
+        }
 
         setDigiContent {
             DigiFilesApp(
                 initialPath = intentInfo.startPath,
                 isPickMode = intentInfo.isPickMode,
                 mimeFilter = intentInfo.mimeFilter,
-                startOnFiles = intentInfo.isPickMode || intentInfo.fromView,
+                startOnFiles = intentInfo.isPickMode || intentInfo.fromView || externalOpenRequest != null,
                 onFilePicked = { path -> returnPickedFile(path) },
                 openFolderRequest = openFolderRequest,
-                onOpenFolderHandled = { openFolderRequest = null }
+                onOpenFolderHandled = { openFolderRequest = null },
+                externalOpenRequest = externalOpenRequest,
+                onExternalOpenHandled = { externalOpenRequest = null },
+                exitAfterExternalViewer = exitAfterExternalViewer,
+                onExitAfterExternalViewerConsumed = { exitAfterExternalViewer = false }
             )
+        }
+    }
+
+    private fun applyExternalIntent(intent: Intent?, isColdStart: Boolean = false) {
+        val resolved = com.appsventory.digiapps.nemo.util.ExternalFileOpen.resolve(this, intent) ?: return
+        externalOpenRequest = resolved
+        if (isColdStart) {
+            // Only exit the activity after a real preview, not after "show parent folder".
+            exitAfterExternalViewer = resolved.kind != com.appsventory.digiapps.nemo.util.ExternalFileOpen.Kind.FOLDER &&
+                resolved.kind != com.appsventory.digiapps.nemo.util.ExternalFileOpen.Kind.OTHER
         }
     }
 
@@ -135,10 +167,11 @@ class MainActivity : ComponentActivity() {
         var start: String? = null
         var fromView = false
         val data: Uri? = intent.data
-        if (data != null && (action == Intent.ACTION_VIEW || action == Intent.ACTION_MAIN)) {
-            val path = uriToPath(data)
+            ?: if (action == Intent.ACTION_SEND) intent.getParcelableExtra(Intent.EXTRA_STREAM) else null
+        if (data != null && (action == Intent.ACTION_VIEW || action == Intent.ACTION_SEND || action == Intent.ACTION_MAIN)) {
+            fromView = action == Intent.ACTION_VIEW || action == Intent.ACTION_SEND
+            val path = com.appsventory.digiapps.nemo.util.ExternalFileOpen.resolveLocalPath(this, data)
             if (path != null) {
-                fromView = true
                 val f = File(path)
                 start = if (f.isDirectory) path else (f.parent ?: root)
             }
@@ -173,17 +206,6 @@ class MainActivity : ComponentActivity() {
             lower == "videos/*" -> "video/*"
             lower == "audios/*" -> "audio/*"
             else -> lower
-        }
-    }
-
-    private fun uriToPath(uri: Uri): String? {
-        return when (uri.scheme) {
-            "file" -> uri.path
-            "content" -> {
-                val p = uri.path ?: return null
-                if (p.contains(":")) p.substringAfterLast(":") else null
-            }
-            else -> null
         }
     }
 
@@ -225,7 +247,12 @@ fun DigiFilesApp(
     startOnFiles: Boolean,
     onFilePicked: (String) -> Unit,
     openFolderRequest: String? = null,
-    onOpenFolderHandled: () -> Unit = {}
+    onOpenFolderHandled: () -> Unit = {},
+    externalOpenRequest: com.appsventory.digiapps.nemo.util.ExternalFileOpen.Resolved? = null,
+    onExternalOpenHandled: () -> Unit = {},
+    /** Cold-start external VIEW: finish the activity when the preview closes so the caller resumes. */
+    exitAfterExternalViewer: Boolean = false,
+    onExitAfterExternalViewerConsumed: () -> Unit = {}
 ) {
     val context = LocalContext.current
     // first launch: the notification popup, then "allow access to your files" (skipped while another app is picking a file)
@@ -240,6 +267,13 @@ fun DigiFilesApp(
     val tasks = remember { FileTasks.get(context) }
     // one player for the whole shell: music keeps playing when switching tabs
     val musicPlayer = rememberMusicPlayer()
+
+    // External ACTION_VIEW overlays shown above the shell
+    var externalImages by remember { mutableStateOf<List<ViewerImage>?>(null) }
+    var externalArchive by remember { mutableStateOf<FileItem?>(null) }
+    var externalArchivePassword by remember { mutableStateOf<CharArray?>(null) }
+    var externalPdf by remember { mutableStateOf<Pair<Uri, String>?>(null) }
+    var externalText by remember { mutableStateOf<Pair<Uri, String>?>(null) }
 
     // ---- Volumes: internal + SD/USB (updates on plug/unplug) + SMB servers found on the LAN
     val internalTitle = stringResource(R.string.storage_internal)
@@ -368,6 +402,82 @@ fun DigiFilesApp(
     var extraPage by remember { mutableStateOf<ExtraPage?>(null) }
     // Copy / Move waiting for "Paste here" (survives navigating between folders)
     var clipboard by remember { mutableStateOf<FileClipboard?>(null) }
+
+    // Consume external open requests (cold + warm). Runs once per non-null request.
+    LaunchedEffect(externalOpenRequest) {
+        val resolved = externalOpenRequest ?: return@LaunchedEffect
+        val shouldExit = exitAfterExternalViewer
+        val handled = com.appsventory.digiapps.nemo.util.ExternalFileOpen.open(
+            context = context,
+            resolved = resolved,
+            musicPlayer = musicPlayer,
+            onArchive = { file ->
+                externalArchive = FileItem.from(file)
+                externalArchivePassword = null
+                // Avoid leaving the user deep in DigiFiles shell under the archive dialog
+                // when this was only an external preview session.
+                if (!shouldExit) {
+                    val parent = file.parent
+                    if (parent != null && !parent.startsWith(context.cacheDir.absolutePath)) {
+                        currentPath = parent
+                    }
+                    showHome = false
+                    mediaPage = null
+                    extraPage = null
+                    browseMode = BrowseMode.DIRECTORY
+                }
+            },
+            onImage = { images, _ ->
+                externalImages = images
+                if (!shouldExit) {
+                    resolved.parentPath?.let { parent -> currentPath = parent }
+                    showHome = false
+                    mediaPage = null
+                    extraPage = null
+                    browseMode = BrowseMode.DIRECTORY
+                }
+            },
+            onPdf = { uri, name -> externalPdf = uri to name },
+            onText = { uri, name -> externalText = uri to name },
+            onNavigateFolder = { folder ->
+                currentPath = folder
+                showHome = false
+                mediaPage = null
+                extraPage = null
+                browseMode = BrowseMode.DIRECTORY
+                if (shouldExit) onExitAfterExternalViewerConsumed()
+            },
+            onUnsupported = {
+                // Clear exit flag so we do not leave a blank shell that finishes on Back only.
+                if (shouldExit) {
+                    onExitAfterExternalViewerConsumed()
+                    (context as? ComponentActivity)?.finish()
+                }
+                Toast.makeText(context, R.string.viewer_unsupported, Toast.LENGTH_SHORT).show()
+            }
+        )
+        onExternalOpenHandled()
+        // Video / audio open their own UI (activity or service). MainActivity was only a trampoline.
+        if (shouldExit && handled &&
+            (resolved.kind == com.appsventory.digiapps.nemo.util.ExternalFileOpen.Kind.VIDEO ||
+                resolved.kind == com.appsventory.digiapps.nemo.util.ExternalFileOpen.Kind.AUDIO)
+        ) {
+            onExitAfterExternalViewerConsumed()
+            (context as? ComponentActivity)?.finish()
+        }
+    }
+
+    fun dismissExternalPreviewAndMaybeExit() {
+        externalImages = null
+        externalArchive = null
+        externalArchivePassword = null
+        externalPdf = null
+        externalText = null
+        if (exitAfterExternalViewer) {
+            onExitAfterExternalViewerConsumed()
+            (context as? ComponentActivity)?.finish()
+        }
+    }
 
     // Active sidebar items are derived from the current path, so several can be active at once:
     // e.g. /storage/emulated/0/Download -> "Internal Storage" AND "Download".
@@ -498,6 +608,13 @@ fun DigiFilesApp(
 
     BackHandler {
         when {
+            // External cold-start preview: never trap the user in DigiFiles shell.
+            // Image/archive Dialogs handle Back themselves; this covers residual shell state.
+            exitAfterExternalViewer && externalImages == null && externalArchive == null &&
+                externalPdf == null && externalText == null -> {
+                onExitAfterExternalViewerConsumed()
+                (context as? ComponentActivity)?.finish()
+            }
             showCreateFolder -> showCreateFolder = false
             extraPage != null -> goHome()
             mediaPage != null -> goHome()
@@ -595,7 +712,10 @@ fun DigiFilesApp(
                         isPickMode = isPickMode,
                         mimeFilter = mimeFilter,
                         onFilePicked = onFilePicked,
-                        onCreateFolder = { showCreateFolder = true },
+                        onCreateFolder = {
+                            newFolderName = ""
+                            showCreateFolder = true
+                        },
                         storageRoot = storageRoot,
                         clipboard = clipboard,
                         onClipboardChange = { clipboard = it },
@@ -730,7 +850,10 @@ fun DigiFilesApp(
 
     if (showCreateFolder) {
         AlertDialog(
-            onDismissRequest = { showCreateFolder = false },
+            onDismissRequest = {
+                showCreateFolder = false
+                newFolderName = ""
+            },
             title = { Text(stringResource(R.string.create_folder)) },
             text = {
                 OutlinedTextField(
@@ -753,12 +876,53 @@ fun DigiFilesApp(
                         }
                     }
                     showCreateFolder = false
+                    newFolderName = ""
                 }) { Text(stringResource(R.string.action_create)) }
             },
             dismissButton = {
-                TextButton(onClick = { showCreateFolder = false }) { Text(stringResource(R.string.action_cancel)) }
+                TextButton(onClick = {
+                    showCreateFolder = false
+                    newFolderName = ""
+                }) { Text(stringResource(R.string.action_cancel)) }
             }
         )
+    }
+
+    // External open: full-screen image viewer
+    externalImages?.let { images ->
+        ImageViewer(
+            images = images,
+            startIndex = 0,
+            onClose = { dismissExternalPreviewAndMaybeExit() },
+            onChanged = { tasks.notifyChanged() }
+        )
+    }
+
+    // External open: archive contents browser
+    externalArchive?.let { archive ->
+        ArchiveViewDialog(
+            archive = archive,
+            password = externalArchivePassword,
+            onExtract = { named ->
+                val parent = File(archive.path).parent ?: return@ArchiveViewDialog
+                val dest = if (named) {
+                    com.appsventory.digiapps.nemo.util.Vfs.uniqueChild(
+                        parent,
+                        com.appsventory.digiapps.nemo.util.archiveBaseName(archive.name)
+                    )
+                } else parent
+                tasks.extract(archive.path, dest, externalArchivePassword)
+            },
+            onDismiss = { dismissExternalPreviewAndMaybeExit() }
+        )
+    }
+
+    externalPdf?.let { (uri, name) ->
+        PdfViewer(uri = uri, title = name, onClose = { dismissExternalPreviewAndMaybeExit() })
+    }
+
+    externalText?.let { (uri, name) ->
+        TextViewer(uri = uri, title = name, onClose = { dismissExternalPreviewAndMaybeExit() })
     }
 }
 

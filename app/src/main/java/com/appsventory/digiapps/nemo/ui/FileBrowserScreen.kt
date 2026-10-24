@@ -191,6 +191,7 @@ private fun FileBrowserContent(
     var folderGridMode by remember { mutableStateOf(AppSettings.defaultGrid) }
     val showHidden = AppSettings.showHidden
     var viewerIndex by remember { mutableStateOf<Int?>(null) }
+    var documentViewer by remember { mutableStateOf<Pair<Uri, DocumentKind>?>(null) }
     var lastFocusedPath by remember { mutableStateOf<String?>(null) }
     var reloadTick by remember { mutableIntStateOf(0) }
     var marked by remember { mutableStateOf(setOf<String>()) }
@@ -489,6 +490,8 @@ private fun FileBrowserContent(
             // ZIP / RAR / 7z / TAR / GZ...: ask what to do (view, extract, open with)
             mode == BrowseMode.DIRECTORY && archiveFormatOf(Vfs.name(path)) != null ->
                 archivePrompt = files.firstOrNull { it.path == path } ?: FileItem.from(File(path))
+            isPdfPath(path) -> documentViewer = Uri.fromFile(File(path)) to DocumentKind.PDF
+            isTextPath(path) -> documentViewer = Uri.fromFile(File(path)) to DocumentKind.TEXT
             else -> FileOpener.open(context, path)
         }
     }
@@ -941,6 +944,14 @@ private fun FileBrowserContent(
             onClose = { viewerIndex = null },
             onChanged = { tasks.notifyChanged() }
         )
+    }
+
+    documentViewer?.let { (uri, kind) ->
+        val name = uri.lastPathSegment ?: "file"
+        when (kind) {
+            DocumentKind.PDF -> PdfViewer(uri = uri, title = name, onClose = { documentViewer = null })
+            DocumentKind.TEXT -> TextViewer(uri = uri, title = name, onClose = { documentViewer = null })
+        }
     }
 }
 
@@ -1703,8 +1714,18 @@ private fun loadFiles(path: String, mimeFilter: String?, showHidden: Boolean): L
         ?: emptyList()
 }
 
+private enum class DocumentKind { PDF, TEXT }
+
 private fun isImagePath(path: String): Boolean =
     File(path).extension.lowercase().let { it in IMAGE_EXTS && it != "svg" && it != "ico" && it != "tiff" && it != "tif" }
+
+private fun isPdfPath(path: String): Boolean =
+    File(path).extension.equals("pdf", ignoreCase = true)
+
+private fun isTextPath(path: String): Boolean {
+    val ext = File(path).extension.lowercase()
+    return ext in TEXT_EXTS
+}
 
 private val IMAGE_EXTS = setOf(
     "jpg", "jpeg", "png", "gif", "webp", "bmp", "heic", "heif", "svg", "ico", "tiff", "tif"
@@ -1714,6 +1735,9 @@ private val VIDEO_EXTS = setOf(
 )
 private val AUDIO_EXTS = setOf(
     "mp3", "wav", "flac", "aac", "ogg", "m4a", "wma", "opus", "amr"
+)
+private val TEXT_EXTS = setOf(
+    "txt", "log", "md", "csv", "json", "xml", "html", "htm", "css", "js", "kt", "java", "py", "sh", "cfg", "ini", "properties"
 )
 
 private fun matchesMime(fileName: String, mimeFilter: String?): Boolean {

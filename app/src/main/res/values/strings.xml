@@ -432,4 +432,14 @@
 
     <string name="action_retry">Retry</string>
 
+    <!-- Document viewers (PDF / text) -->
+    <string name="viewer_open_failed">This file could not be opened.</string>
+    <string name="viewer_pdf_error">This PDF is damaged, encrypted, or cannot be displayed.</string>
+    <string name="viewer_pdf_empty">This PDF has no pages.</string>
+    <string name="viewer_pdf_pages">%1$d pages</string>
+    <string name="viewer_pdf_page">Page %1$d</string>
+    <string name="viewer_text_empty">(Empty file)</string>
+    <string name="viewer_text_truncated">Showing the first 2 MB of this file</string>
+    <string name="viewer_unsupported">Digi Files cannot open this file type.</string>
+
 </resources>
